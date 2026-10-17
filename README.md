@@ -1,10 +1,10 @@
 # TempLock.Examples
 
-Usage examples for **[TempLock](https://www.nuget.org/packages/TempLock)** — a hardened
+Runnable usage examples for **[TempLock](https://www.nuget.org/packages/TempLock)** — a hardened
 trial/evaluation licensing library for Windows desktop applications.
 
-> This repository will hold runnable examples. It documents how to **use** the library only; it does
-> not describe internal behaviour or storage locations.
+> This repository shows how to **use** the library. It does not describe internal behaviour or
+> storage locations. All examples consume the published NuGet package.
 
 ## What is TempLock?
 
@@ -37,7 +37,7 @@ var trial = new TempLockManager(new TempLockOptions
     ApplicationSecret = MyEmbeddedSecret,  // byte[] baked into your app
     TrialDays = 30,
     Scope = TrialScope.PerUser,            // or PerMachine
-    VmPolicy = VmPolicy.Block,             // Block | Warn | Allow
+    VmPolicy = VmPolicy.Warn,              // Block | Warn | Allow (Warn is the default)
     EnableNtpCheck = true
 });
 
@@ -53,6 +53,29 @@ if (!status.IsValid)
 Call `EnsureRegistered()` once at application start. Use `GetStatus()` to re-check without ever
 starting a new trial.
 
+## Examples in this repository
+
+| Example | What it shows |
+|---------|---------------|
+| [`TempLock.Demo.Console`](TempLock.Demo.Console) | Minimal console integration: register on start, evaluate `TrialStatus`. |
+| [`TempLock.Demo.Wpf`](TempLock.Demo.Wpf) | WPF app with a trial banner, days-remaining display and locked-state handling. |
+| [`installer/setup.iss`](installer/setup.iss) | Inno Setup installer that seeds a per-machine trial elevated and keeps it on uninstall. |
+
+### Build & run
+
+```
+dotnet build TempLock.Samples.sln -c Release
+dotnet run --project TempLock.Demo.Console -c Release
+```
+
+Requires the .NET SDK on Windows. The examples restore `TempLock` from NuGet.
+
+## Per-machine trials
+
+For `TrialScope.PerMachine`, seed the machine-wide state from the (elevated) installer once — see
+`installer/setup.iss`. When a lower-privileged user runs the app afterwards, TempLock mirrors the
+state into the user-writable locations automatically during the early part of the trial.
+
 ## Legal / privacy
 
 Trial enforcement processes device-bound data on the local machine. Disclose trial tracking in your
@@ -60,4 +83,5 @@ EULA / privacy policy. The library sends no user data; the optional NTP check is
 
 ## License
 
-The TempLock library is proprietary. See the package for its license terms.
+The TempLock library is proprietary. See the package for its license terms. The example code in this
+repository may be used freely as a starting point.

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TempLock" Version="0.9.2" />
+    <PackageReference Include="TempLock" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
